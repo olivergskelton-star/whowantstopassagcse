@@ -1,5 +1,5 @@
-const CACHE='pass-gcse-v3';
-const ASSETS=['./','./index.html','./questions-core.js','./questions-macbeth.js','./app.js','./manifest.webmanifest'];
+const CACHE='pass-gcse-v4';
+const ASSETS=['./','./index.html','./questions-core.js','./questions-macbeth.js','./questions-christmas-carol.js','./questions-inspector-calls.js','./app.js','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',event=>{event.respondWith(fetch(event.request).catch(()=>caches.match(event.request)));});
