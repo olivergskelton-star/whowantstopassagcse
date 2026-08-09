@@ -17,22 +17,15 @@
 <body>
   <main class="app">
     <header class="topbar"><div class="brand">PASS<span>!</span> GCSE</div><div class="pill">English Lit</div></header>
-    <section id="home">
-      <div class="hero"><div class="eyebrow">Quickfire revision</div><h1>Beat the clock.<br>Bank the grade.</h1><p class="sub">Ten fast questions. No notes. No waffle. Learn the text by playing it.</p></div>
-      <div class="card chooser"><div class="label">Choose your text</div><div class="texts" id="textChoices"></div></div>
-      <button class="start" id="startBtn">START QUICKFIRE ⚡</button><p class="micro">10 questions · 12 seconds each · streak bonuses</p>
-    </section>
-    <section id="game" class="game hidden">
-      <div class="stats"><div class="stat"><strong id="score">0</strong><span>Score</span></div><div class="stat"><strong id="streak">0</strong><span>Streak</span></div><div class="stat"><strong id="qNum">1/10</strong><span>Question</span></div></div>
-      <div class="timer"><div id="timerFill" class="timer-fill"></div></div>
-      <div class="card question-card"><div id="streakPop" class="streak-pop hidden">🔥 STREAK x3</div><div class="q-meta"><span id="qTextName"></span><span id="qType" class="type"></span></div><p id="question" class="question"></p></div>
-      <div id="answers" class="answers"></div><div id="feedback" class="feedback hidden"></div><button id="nextBtn" class="next hidden">NEXT QUESTION →</button>
-    </section>
+    <section id="home"><div class="hero"><div class="eyebrow">Quickfire revision</div><h1>Beat the clock.<br>Bank the grade.</h1><p class="sub">Ten fast questions. No notes. No waffle. Learn the text by playing it.</p></div><div class="card chooser"><div class="label">Choose your text</div><div class="texts" id="textChoices"></div></div><button class="start" id="startBtn">START QUICKFIRE ⚡</button><p class="micro">10 questions · 12 seconds each · streak bonuses</p></section>
+    <section id="game" class="game hidden"><div class="stats"><div class="stat"><strong id="score">0</strong><span>Score</span></div><div class="stat"><strong id="streak">0</strong><span>Streak</span></div><div class="stat"><strong id="qNum">1/10</strong><span>Question</span></div></div><div class="timer"><div id="timerFill" class="timer-fill"></div></div><div class="card question-card"><div id="streakPop" class="streak-pop hidden">🔥 STREAK x3</div><div class="q-meta"><span id="qTextName"></span><span id="qType" class="type"></span></div><p id="question" class="question"></p></div><div id="answers" class="answers"></div><div id="feedback" class="feedback hidden"></div><button id="nextBtn" class="next hidden">NEXT QUESTION →</button></section>
     <section id="end" class="card end hidden"><div class="score-ring"><div><strong id="finalScore">0</strong><span>points</span></div></div><h2 id="endTitle">Nice run.</h2><p id="endCopy"></p><div class="end-actions"><button class="start" id="againBtn">PLAY AGAIN ⚡</button><button class="secondary" id="changeBtn">CHANGE TEXT</button></div></section>
-    <div class="footer">Prototype v0.3 · Modular question banks</div>
+    <div class="footer">Prototype v0.4 · Expanded English Literature banks</div>
   </main>
   <script src="questions-core.js"></script>
   <script src="questions-macbeth.js"></script>
+  <script src="questions-christmas-carol.js"></script>
+  <script src="questions-inspector-calls.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
