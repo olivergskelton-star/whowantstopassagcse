@@ -1,30 +1,16 @@
 const questionBank = window.QUESTION_BANKS;
 if (window.EXTRA_MACBETH_QUESTIONS) questionBank.Macbeth.push(...window.EXTRA_MACBETH_QUESTIONS);
+if (window.EXTRA_CHRISTMAS_CAROL_QUESTIONS) questionBank['A Christmas Carol'].push(...window.EXTRA_CHRISTMAS_CAROL_QUESTIONS);
+if (window.EXTRA_INSPECTOR_CALLS_QUESTIONS) questionBank['An Inspector Calls'].push(...window.EXTRA_INSPECTOR_CALLS_QUESTIONS);
 
 const state={text:'Macbeth',questions:[],index:0,score:0,streak:0,answered:false,time:12,timer:null};
 const $=id=>document.getElementById(id),home=$('home'),game=$('game'),end=$('end');
-
-function renderChoices(){
-  $('textChoices').innerHTML=Object.keys(questionBank).map(n=>`<button class="text-btn ${state.text===n?'active':''}" data-text="${n}"><span>${n}</span><small>${questionBank[n].length} questions</small></button>`).join('');
-  document.querySelectorAll('.text-btn').forEach(b=>b.onclick=()=>{state.text=b.dataset.text;renderChoices()});
-}
+function renderChoices(){$('textChoices').innerHTML=Object.keys(questionBank).map(n=>`<button class="text-btn ${state.text===n?'active':''}" data-text="${n}"><span>${n}</span><small>${questionBank[n].length} questions</small></button>`).join('');document.querySelectorAll('.text-btn').forEach(b=>b.onclick=()=>{state.text=b.dataset.text;renderChoices()});}
 function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
 function startGame(){state.questions=shuffle(questionBank[state.text]).slice(0,10);state.index=0;state.score=0;state.streak=0;home.classList.add('hidden');end.classList.add('hidden');game.classList.remove('hidden');renderQuestion()}
-function renderQuestion(){
-  clearInterval(state.timer);state.answered=false;state.time=12;const q=state.questions[state.index];
-  $('score').textContent=state.score;$('streak').textContent=state.streak;$('qNum').textContent=`${state.index+1}/10`;$('qTextName').textContent=state.text;$('qType').textContent=q.type;$('question').textContent=q.q;
-  $('feedback').className='feedback hidden';$('nextBtn').classList.add('hidden');$('streakPop').classList.toggle('hidden',state.streak<3);$('streakPop').textContent=`🔥 STREAK x${state.streak}`;
-  $('answers').innerHTML=q.a.map((x,i)=>`<button class="answer" data-i="${i}"><span class="letter">${String.fromCharCode(65+i)}</span>${x}</button>`).join('');
-  document.querySelectorAll('.answer').forEach(b=>b.onclick=()=>answer(Number(b.dataset.i),false));updateTimer();
-  state.timer=setInterval(()=>{state.time-=.1;updateTimer();if(state.time<=0){clearInterval(state.timer);answer(-1,true)}},100);
-}
+function renderQuestion(){clearInterval(state.timer);state.answered=false;state.time=12;const q=state.questions[state.index];$('score').textContent=state.score;$('streak').textContent=state.streak;$('qNum').textContent=`${state.index+1}/10`;$('qTextName').textContent=state.text;$('qType').textContent=q.type;$('question').textContent=q.q;$('feedback').className='feedback hidden';$('nextBtn').classList.add('hidden');$('streakPop').classList.toggle('hidden',state.streak<3);$('streakPop').textContent=`🔥 STREAK x${state.streak}`;$('answers').innerHTML=q.a.map((x,i)=>`<button class="answer" data-i="${i}"><span class="letter">${String.fromCharCode(65+i)}</span>${x}</button>`).join('');document.querySelectorAll('.answer').forEach(b=>b.onclick=()=>answer(Number(b.dataset.i),false));updateTimer();state.timer=setInterval(()=>{state.time-=.1;updateTimer();if(state.time<=0){clearInterval(state.timer);answer(-1,true)}},100);}
 function updateTimer(){$('timerFill').style.width=`${Math.max(0,state.time/12*100)}%`}
-function answer(choice,timed){
-  if(state.answered)return;state.answered=true;clearInterval(state.timer);const q=state.questions[state.index],ok=choice===q.correct;
-  if(ok){state.streak++;state.score+=100+Math.max(0,Math.ceil(state.time))*4+(state.streak>=3?state.streak*5:0)}else state.streak=0;
-  document.querySelectorAll('.answer').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===choice)b.classList.add('wrong');else b.classList.add('dim')});
-  $('score').textContent=state.score;$('streak').textContent=state.streak;const f=$('feedback');f.classList.remove('hidden');if(ok)f.innerHTML=`<strong>Correct.</strong> ${q.why}`;else{f.classList.add('bad');f.innerHTML=`<strong>${timed?'Time!':'Not quite.'}</strong> ${q.why}`}$('nextBtn').classList.remove('hidden');$('nextBtn').textContent=state.index===9?'SEE RESULT →':'NEXT QUESTION →';
-}
+function answer(choice,timed){if(state.answered)return;state.answered=true;clearInterval(state.timer);const q=state.questions[state.index],ok=choice===q.correct;if(ok){state.streak++;state.score+=100+Math.max(0,Math.ceil(state.time))*4+(state.streak>=3?state.streak*5:0)}else state.streak=0;document.querySelectorAll('.answer').forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');else if(i===choice)b.classList.add('wrong');else b.classList.add('dim')});$('score').textContent=state.score;$('streak').textContent=state.streak;const f=$('feedback');f.classList.remove('hidden');if(ok)f.innerHTML=`<strong>Correct.</strong> ${q.why}`;else{f.classList.add('bad');f.innerHTML=`<strong>${timed?'Time!':'Not quite.'}</strong> ${q.why}`}$('nextBtn').classList.remove('hidden');$('nextBtn').textContent=state.index===9?'SEE RESULT →':'NEXT QUESTION →';}
 function next(){state.index++;state.index>=10?finish():renderQuestion()}
 function finish(){game.classList.add('hidden');end.classList.remove('hidden');$('finalScore').textContent=state.score;let title='Good start.',copy='You have the shape of the text. Another run will make the details stick.';if(state.score>=1250){title='Absolute weapon. 🔥';copy='Fast and accurate. Recall is becoming instinct.'}else if(state.score>=900){title='Strong run. ⚡';copy='You know this text. One more run and push the score higher.'}else if(state.score>=600){title='Getting dangerous.';copy='The knowledge is building. Replay while the corrections are fresh.'}$('endTitle').textContent=title;$('endCopy').textContent=`${state.text}: ${state.score} points. ${copy}`;const key=`passgcse-best-${state.text}`,old=Number(localStorage.getItem(key)||0);if(state.score>old)localStorage.setItem(key,state.score)}
 $('startBtn').onclick=startGame;$('nextBtn').onclick=next;$('againBtn').onclick=startGame;$('changeBtn').onclick=()=>{end.classList.add('hidden');home.classList.remove('hidden');renderChoices()};renderChoices();
