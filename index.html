@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pass GCSE" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Who Wants to Pass a GCSE?</title>
+  <style>
+    :root{
+      --bg:#08111f;--panel:#111c2f;--panel2:#16233a;--text:#f8fafc;--muted:#9fb0c8;
+      --lime:#b7ff2a;--cyan:#35e3ff;--amber:#ffd43b;--red:#ff5c72;--white:#fff;
+      --radius:24px;--shadow:0 18px 55px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#132341 0,#08111f 42%,#050b14 100%);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100vh;min-height:100dvh;display:flex;justify-content:center;overflow-x:hidden}
+    button{font:inherit}
+    .app{width:min(100%,500px);min-height:100dvh;padding:calc(18px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:18px}
+    .topbar{display:flex;justify-content:space-between;align-items:center}
+    .brand{font-weight:950;letter-spacing:-.04em;font-size:22px;line-height:1}
+    .brand span{color:var(--lime)}
+    .pill{padding:9px 12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);border-radius:999px;color:var(--muted);font-size:13px;font-weight:800}
+    .hero{padding:22px 0 6px}
+    .eyebrow{color:var(--cyan);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:900}
+    h1{font-size:46px;line-height:.96;letter-spacing:-.06em;margin:10px 0 12px;max-width:430px}
+    .sub{color:var(--muted);font-size:17px;line-height:1.5;margin:0;max-width:420px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .chooser{padding:18px}
+    .label{font-size:13px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    .texts{display:grid;gap:10px}
+    .text-btn{width:100%;text-align:left;border:1px solid rgba(255,255,255,.09);background:var(--panel2);color:var(--text);padding:15px 16px;border-radius:18px;font-weight:850;display:flex;justify-content:space-between;align-items:center;transition:.16s ease}
+    .text-btn:active{transform:scale(.985)}
+    .text-btn.active{border-color:var(--lime);box-shadow:0 0 0 1px var(--lime) inset;background:#17283a}
+    .text-btn small{color:var(--muted);font-weight:700}
+    .start{border:0;background:var(--lime);color:#08111f;width:100%;padding:18px;border-radius:19px;font-size:18px;font-weight:1000;letter-spacing:-.02em;box-shadow:0 12px 35px rgba(183,255,42,.2)}
+    .start:active{transform:translateY(1px)}
+    .micro{color:#72839b;text-align:center;font-size:12px}
+    .hidden{display:none!important}
+    .game{display:flex;flex-direction:column;gap:15px;flex:1}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:17px;padding:10px 12px;text-align:center}
+    .stat strong{display:block;font-size:21px;letter-spacing:-.04em}
+    .stat span{font-size:10px;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.1em}
+    .timer{height:8px;border-radius:99px;background:#1b2a41;overflow:hidden}
+    .timer-fill{height:100%;width:100%;background:linear-gradient(90deg,var(--cyan),var(--lime));transition:width .1s linear}
+    .question-card{padding:22px 20px 20px;position:relative;overflow:hidden}
+    .q-meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;font-weight:850;margin-bottom:14px}
+    .q-meta .type{color:var(--cyan)}
+    .question{font-size:24px;line-height:1.22;letter-spacing:-.035em;font-weight:900;margin:0}
+    .answers{display:grid;gap:11px}
+    .answer{position:relative;width:100%;text-align:left;color:var(--text);background:var(--panel);border:1px solid rgba(255,255,255,.09);padding:16px 16px 16px 54px;border-radius:18px;font-size:16px;line-height:1.3;font-weight:800;min-height:62px;transition:.15s ease}
+    .answer .letter{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#243450;color:#b8c7da;font-size:12px;font-weight:950}
+    .answer:active{transform:scale(.987)}
+    .answer.correct{border-color:var(--lime);background:rgba(183,255,42,.12)}
+    .answer.wrong{border-color:var(--red);background:rgba(255,92,114,.12)}
+    .answer.dim{opacity:.45}
+    .feedback{padding:17px 18px;border-radius:18px;font-size:14px;line-height:1.42;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+    .feedback strong{color:var(--lime)}
+    .feedback.bad strong{color:var(--red)}
+    .next{width:100%;padding:16px;border:0;border-radius:18px;background:var(--white);color:#08111f;font-weight:950;font-size:16px}
+    .end{padding:28px 20px;text-align:center}
+    .score-ring{width:128px;height:128px;border-radius:50%;margin:8px auto 20px;display:grid;place-items:center;border:9px solid var(--lime);box-shadow:0 0 45px rgba(183,255,42,.18)}
+    .score-ring strong{font-size:42px;letter-spacing:-.07em}.score-ring span{display:block;font-size:10px;color:var(--muted);font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .end h2{font-size:32px;letter-spacing:-.05em;margin:0 0 8px}.end p{color:var(--muted);line-height:1.5;margin:0 auto 20px;max-width:330px}
+    .end-actions{display:grid;gap:10px}.secondary{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.14);padding:15px;border-radius:18px;font-weight:850}
+    .streak-pop{position:absolute;right:14px;top:14px;background:var(--amber);color:#342500;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:1000;transform:rotate(3deg)}
+    .footer{margin-top:auto;color:#53657d;font-size:11px;text-align:center;padding-top:4px}
+    @media(max-width:380px){h1{font-size:39px}.question{font-size:21px}.app{padding-left:14px;padding-right:14px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">PASS<span>!</span> GCSE</div>
+      <div class="pill">English Lit</div>
+    </header>
+
+    <section id="home">
+      <div class="hero">
+        <div class="eyebrow">Quickfire revision</div>
+        <h1>Beat the clock.<br>Bank the grade.</h1>
+        <p class="sub">Ten fast questions. No notes. No waffle. Learn the text by playing it.</p>
+      </div>
+
+      <div class="card chooser">
+        <div class="label">Choose your text</div>
+        <div class="texts" id="textChoices"></div>
+      </div>
+      <div style="height:12px"></div>
+      <button class="start" id="startBtn">START QUICKFIRE ⚡</button>
+      <p class="micro">10 questions · 12 seconds each · streak bonuses</p>
+    </section>
+
+    <section id="game" class="game hidden">
+      <div class="stats">
+        <div class="stat"><strong id="score">0</strong><span>Score</span></div>
+        <div class="stat"><strong id="streak">0</strong><span>Streak</span></div>
+        <div class="stat"><strong id="qNum">1/10</strong><span>Question</span></div>
+      </div>
+      <div class="timer"><div id="timerFill" class="timer-fill"></div></div>
+      <div class="card question-card">
+        <div id="streakPop" class="streak-pop hidden">🔥 STREAK x3</div>
+        <div class="q-meta"><span id="qTextName"></span><span id="qType" class="type"></span></div>
+        <p id="question" class="question"></p>
+      </div>
+      <div id="answers" class="answers"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="nextBtn" class="next hidden">NEXT QUESTION →</button>
+    </section>
+
+    <section id="end" class="card end hidden">
+      <div class="score-ring"><div><strong id="finalScore">0</strong><span>points</span></div></div>
+      <h2 id="endTitle">Nice run.</h2>
+      <p id="endCopy"></p>
+      <div class="end-actions">
+        <button class="start" id="againBtn">PLAY AGAIN ⚡</button>
+        <button class="secondary" id="changeBtn">CHANGE TEXT</button>
+      </div>
+    </section>
+
+    <div class="footer">Prototype v0.1 · Progress stays on this device</div>
+  </main>
+
+  <script>
+    const questionBank = {
+      "Macbeth": [
+        {type:"Plot",q:"Who first tells Macbeth that he may become king?",a:["Banquo","The witches","Lady Macbeth"],correct:1,why:"The three witches greet Macbeth with the prophecy that he will be king hereafter."},
+        {type:"Character",q:"Who persuades Macbeth to murder King Duncan?",a:["Lady Macbeth","Macduff","Malcolm"],correct:0,why:"Lady Macbeth attacks Macbeth's courage and pushes him towards Duncan's murder."},
+        {type:"Quote",q:"Who says: ‘Look like the innocent flower, but be the serpent under’t’?",a:["Macbeth","Lady Macbeth","Banquo"],correct:1,why:"Lady Macbeth tells Macbeth to hide his murderous intentions behind a harmless appearance."},
+        {type:"Theme",q:"What does blood most often symbolise in Macbeth?",a:["Royal power","Guilt and violence","Family loyalty"],correct:1,why:"Blood repeatedly links murder with the guilt that Macbeth and Lady Macbeth cannot escape."},
+        {type:"Plot",q:"Why does Macbeth order Banquo's murder?",a:["Banquo insults him","He fears Banquo's descendants will be kings","Duncan told him to"],correct:1,why:"The witches predict that Banquo will father kings, threatening Macbeth's hold on the crown."},
+        {type:"Character",q:"Who discovers Duncan's murdered body?",a:["Macduff","Malcolm","Ross"],correct:0,why:"Macduff discovers Duncan and immediately raises the alarm."},
+        {type:"Quote",q:"‘Out, damned spot!’ reveals Lady Macbeth is suffering from…",a:["Jealousy","Guilt","Ambition"],correct:1,why:"While sleepwalking, she imagines blood on her hands, showing overwhelming guilt."},
+        {type:"Theme",q:"Macbeth's tragic downfall is most strongly driven by…",a:["Ambition","Generosity","Patience"],correct:0,why:"His unchecked ambition makes him choose murder and then further violence to protect his power."},
+        {type:"Plot",q:"Who kills Macbeth at the end of the play?",a:["Banquo","Macduff","Malcolm"],correct:1,why:"Macduff kills Macbeth in battle and Malcolm becomes king."},
+        {type:"Context",q:"King James I was especially interested in…",a:["Witchcraft","Industrialisation","The French Revolution"],correct:0,why:"James I had a strong interest in witchcraft, making the supernatural especially relevant to Shakespeare's audience."},
+        {type:"Quote",q:"‘Is this a dagger which I see before me’ comes just before Macbeth…",a:["Kills Duncan","Kills Banquo","Meets the witches"],correct:0,why:"Macbeth hallucinates the dagger as he prepares to murder Duncan."},
+        {type:"Character",q:"Banquo mainly acts as a contrast to Macbeth because Banquo…",a:["Ignores the witches completely","Hears prophecy without murdering for it","Wants to become king immediately"],correct:1,why:"Banquo is tempted by prophecy too, but does not choose murder to force it into reality."}
+      ],
+      "A Christmas Carol": [
+        {type:"Character",q:"At the beginning, Scrooge is best described as…",a:["Generous","Miserly","Fearless"],correct:1,why:"Scrooge is presented as cold, isolated and obsessed with money."},
+        {type:"Plot",q:"Who is the first ghost to visit Scrooge?",a:["Jacob Marley","Ghost of Christmas Past","Ghost of Christmas Present"],correct:0,why:"Marley's ghost warns Scrooge that three spirits will visit him."},
+        {type:"Quote",q:"‘Are there no prisons?’ shows Scrooge's early attitude towards…",a:["The poor","Children","Christmas food"],correct:0,why:"Scrooge initially treats poverty as someone else's problem and rejects social responsibility."},
+        {type:"Theme",q:"Tiny Tim is most closely used to develop the theme of…",a:["Social responsibility","Revenge","Romantic love"],correct:0,why:"Tiny Tim makes the consequences of poverty personal and strengthens Dickens's call for compassion."},
+        {type:"Plot",q:"Which spirit shows Scrooge his own neglected grave?",a:["Christmas Past","Christmas Present","Christmas Yet to Come"],correct:2,why:"The final spirit forces Scrooge to face the lonely consequences of his current life."},
+        {type:"Character",q:"Fred is Scrooge's…",a:["Nephew","Brother","Employer"],correct:0,why:"Fred is Scrooge's cheerful nephew and repeatedly invites him to Christmas dinner."},
+        {type:"Quote",q:"‘Solitary as an oyster’ suggests Scrooge is…",a:["Closed off but capable of change","Popular and sociable","Weak and frightened"],correct:0,why:"The oyster image suggests isolation, while also hinting that something valuable may exist inside."},
+        {type:"Context",q:"Dickens wrote the novella partly to criticise…",a:["Victorian attitudes to poverty","Medieval warfare","Elizabethan theatre"],correct:0,why:"The novella attacks indifference to poverty and argues for greater social responsibility."},
+        {type:"Plot",q:"What happens to Scrooge by the end?",a:["He leaves London","He becomes generous and sociable","He loses all his money"],correct:1,why:"Scrooge reforms, supports the Cratchits and embraces community and Christmas."},
+        {type:"Theme",q:"The three spirits mainly allow Dickens to explore…",a:["Change and redemption","Military honour","Political revolution"],correct:0,why:"By confronting past, present and future, Scrooge is given the chance to change."},
+        {type:"Character",q:"Bob Cratchit works as Scrooge's…",a:["Clerk","Lawyer","Business partner"],correct:0,why:"Bob is Scrooge's underpaid clerk and father of the Cratchit family."},
+        {type:"Quote",q:"‘Mankind was my business’ is said by…",a:["Fred","Marley","Tiny Tim"],correct:1,why:"Marley regrets caring only about money instead of his duty to other people."}
+      ],
+      "An Inspector Calls": [
+        {type:"Plot",q:"What event is the Birling family celebrating when the Inspector arrives?",a:["A wedding anniversary","Sheila and Gerald's engagement","Mr Birling's knighthood"],correct:1,why:"The play opens with the family celebrating Sheila Birling's engagement to Gerald Croft."},
+        {type:"Character",q:"Who dismisses Eva Smith from Birling & Co.?",a:["Arthur Birling","Sheila","Gerald"],correct:0,why:"Mr Birling sacks Eva after she helps lead a strike for better wages."},
+        {type:"Theme",q:"The Inspector's central message is about…",a:["Individual wealth","Collective responsibility","Romantic loyalty"],correct:1,why:"The Inspector argues that people are responsible for one another and are part of one society."},
+        {type:"Quote",q:"‘We are members of one body’ is spoken by…",a:["Eric","The Inspector","Gerald"],correct:1,why:"The Inspector uses the image of one body to express Priestley's message of social responsibility."},
+        {type:"Character",q:"Who is most resistant to accepting responsibility?",a:["Mr and Mrs Birling","Sheila and Eric","Eva and the Inspector"],correct:0,why:"The older Birlings repeatedly defend themselves, while Sheila and Eric show greater willingness to change."},
+        {type:"Plot",q:"How is Gerald connected to Eva/Daisy?",a:["He employed her","He had a relationship with her","He was her brother"],correct:1,why:"Gerald had an affair with Daisy Renton and temporarily supported her."},
+        {type:"Context",q:"The play is set in 1912 but first performed in 1945. This helps Priestley expose…",a:["Birling's false confidence about the future","Shakespeare's influence","Victorian factory law"],correct:0,why:"The audience knows Birling's confident predictions about war and the Titanic are disastrously wrong."},
+        {type:"Character",q:"Who uses Eva's case to reject a request for charity?",a:["Mrs Birling","Sheila","Edna"],correct:0,why:"Mrs Birling uses her position on a charity committee to refuse Eva help."},
+        {type:"Theme",q:"Sheila and Eric mainly represent…",a:["A younger generation capable of change","The power of inherited wealth","Resistance to social reform"],correct:0,why:"Priestley presents the younger characters as more willing to learn and change."},
+        {type:"Plot",q:"What happens in the final moments of the play?",a:["The Inspector returns to the room","A real inspector is on the way","Eva arrives at the house"],correct:1,why:"A phone call announces that a girl has died and a police inspector is coming to question them."},
+        {type:"Quote",q:"‘Unsinkable, absolutely unsinkable’ refers to…",a:["The Titanic","Birling & Co.","The British Empire"],correct:0,why:"Birling's confidence about the Titanic creates dramatic irony because the audience knows it sank."},
+        {type:"Character",q:"Eric's involvement with Eva includes…",a:["Stealing money to support her","Getting her a job at Milwards","Reporting her to the police"],correct:0,why:"Eric steals money from his father's business after Eva becomes pregnant."}
+      ]
+    };
+
+    const state = {text:"Macbeth",questions:[],index:0,score:0,streak:0,answered:false,time:12,timer:null};
+    const $ = id => document.getElementById(id);
+    const home=$('home'), game=$('game'), end=$('end');
+
+    function renderChoices(){
+      $('textChoices').innerHTML = Object.keys(questionBank).map(name => `
+        <button class="text-btn ${state.text===name?'active':''}" data-text="${name}">
+          <span>${name}</span><small>${questionBank[name].length} questions</small>
+        </button>`).join('');
+      document.querySelectorAll('.text-btn').forEach(btn=>btn.onclick=()=>{state.text=btn.dataset.text;renderChoices();});
+    }
+
+    function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+
+    function startGame(){
+      state.questions=shuffle(questionBank[state.text]).slice(0,10);
+      state.index=0;state.score=0;state.streak=0;
+      home.classList.add('hidden');end.classList.add('hidden');game.classList.remove('hidden');
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      clearInterval(state.timer);state.answered=false;state.time=12;
+      const q=state.questions[state.index];
+      $('score').textContent=state.score;$('streak').textContent=state.streak;$('qNum').textContent=`${state.index+1}/10`;
+      $('qTextName').textContent=state.text;$('qType').textContent=q.type;$('question').textContent=q.q;
+      $('feedback').classList.add('hidden');$('feedback').classList.remove('bad');$('nextBtn').classList.add('hidden');
+      $('streakPop').classList.toggle('hidden',state.streak<3);$('streakPop').textContent=`🔥 STREAK x${state.streak}`;
+      $('answers').innerHTML=q.a.map((answer,i)=>`<button class="answer" data-i="${i}"><span class="letter">${String.fromCharCode(65+i)}</span>${answer}</button>`).join('');
+      document.querySelectorAll('.answer').forEach(btn=>btn.onclick=()=>answerQuestion(Number(btn.dataset.i),false));
+      updateTimer();
+      state.timer=setInterval(()=>{state.time-=.1;updateTimer();if(state.time<=0){clearInterval(state.timer);answerQuestion(-1,true)}},100);
+    }
+
+    function updateTimer(){$('timerFill').style.width=`${Math.max(0,state.time/12*100)}%`}
+
+    function answerQuestion(choice,timedOut){
+      if(state.answered)return;state.answered=true;clearInterval(state.timer);
+      const q=state.questions[state.index];const correct=choice===q.correct;
+      if(correct){
+        state.streak++;
+        const speed=Math.max(0,Math.ceil(state.time));
+        const streakBonus=state.streak>=3?state.streak*5:0;
+        state.score+=100+speed*4+streakBonus;
+      }else state.streak=0;
+      document.querySelectorAll('.answer').forEach((btn,i)=>{
+        btn.disabled=true;
+        if(i===q.correct)btn.classList.add('correct');
+        else if(i===choice)btn.classList.add('wrong');
+        else btn.classList.add('dim');
+      });
+      $('score').textContent=state.score;$('streak').textContent=state.streak;
+      const f=$('feedback');f.classList.remove('hidden');
+      if(correct){f.innerHTML=`<strong>Correct.</strong> ${q.why}`}
+      else {f.classList.add('bad');f.innerHTML=`<strong>${timedOut?'Time!':'Not quite.'}</strong> ${q.why}`}
+      $('nextBtn').classList.remove('hidden');$('nextBtn').textContent=state.index===9?'SEE RESULT →':'NEXT QUESTION →';
+    }
+
+    function next(){state.index++;if(state.index>=10)finish();else renderQuestion()}
+
+    function finish(){
+      game.classList.add('hidden');end.classList.remove('hidden');$('finalScore').textContent=state.score;
+      const pct=Math.round(state.score/1600*100);
+      let title='Good start.';let copy='You have the shape of the text. Another run will make the details stick.';
+      if(state.score>=1250){title='Absolute weapon. 🔥';copy='Fast and accurate. You are turning recall into instinct — exactly what we want.'}
+      else if(state.score>=900){title='Strong run. ⚡';copy='You know this text. One more run and you can push the score much higher.'}
+      else if(state.score>=600){title='Getting dangerous.';copy='The knowledge is building. Replay it now while the corrections are fresh.'}
+      $('endTitle').textContent=title;$('endCopy').textContent=`${state.text}: ${state.score} points. ${copy}`;
+      const bestKey=`passgcse-best-${state.text}`;const old=Number(localStorage.getItem(bestKey)||0);if(state.score>old)localStorage.setItem(bestKey,state.score);
+    }
+
+    $('startBtn').onclick=startGame;$('nextBtn').onclick=next;$('againBtn').onclick=startGame;
+    $('changeBtn').onclick=()=>{end.classList.add('hidden');home.classList.remove('hidden');renderChoices()};
+    renderChoices();
+
+    if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));}
+  </script>
+</body>
+</html>
